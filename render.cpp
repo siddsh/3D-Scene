@@ -4,7 +4,7 @@
 #include"cube.cpp"
 #include"torus.cpp"
 #pragma once
-//A variable to store the X position where the mouse is clicked
+/*//A variable to store the X position where the mouse is clicked
 int xOrigin = -1;
 // angle of rotation for the camera direction
 float angle = 0.0;
@@ -80,6 +80,7 @@ void renderScene(void) {
 			glPopMatrix();
 		}
 		*/
+		/*
 	glLoadIdentity();
 	gluLookAt(x, 1.0f, z,
 		x + lx, 1.0f, z + lz,
@@ -109,4 +110,98 @@ void renderScene(void) {
 	anglePyramid += 0.2f;
 	angleCube -= 0.15f;
 	glutSwapBuffers();
+}*/
+#define INIT_VIEW_X 0.0    //Define initial camera position and viewing window values
+#define INIT_VIEW_Y 0.0
+#define INIT_VIEW_Z -4.5
+#define VIEW_LEFT -2.0
+#define VIEW_RIGHT 2.0
+#define VIEW_BOTTOM -2.0
+#define VIEW_TOP 2.0
+#define VIEW_NEAR 1.0
+#define VIEW_FAR 200.0
+GLfloat AmbientLight[] = { 0.3,0.3,0.3,1.0 };                  //Initialization values for lighting
+GLfloat DiffuseLight[] = { 0.8,0.8,0.8,1.0 };
+GLfloat SpecularLight[] = { 1.0,1.0,1.0,1.0 };
+GLfloat SpecRef[] = { 0.7,0.7,0.7,1.0 };
+GLfloat LightPos[] = { -50.0,50.0,100.0,1.0 };
+GLint Shine = 128;
+GLint walkX = 0, walkY = 0, lookX = 0, lookY = 0;
+GLint world = 1, oldX = -1, oldY = -1;
+GLint doll = -1;
+
+#include"human.cpp"
+#include"resize.cpp"
+
+void SetupRend()
+{
+	glClearColor(0.7, 0.7, 1.0, 1.0);
+	glEnable(GL_DEPTH_TEST);         //Enable depth testing
+	glEnable(GL_LIGHTING);             //Enable lighting
+	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight);//Set up and enable light zero
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, DiffuseLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, SpecularLight);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_COLOR_MATERIAL);                   //Enable color tracking
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);//Set material to follow
+	glMaterialfv(GL_FRONT, GL_SPECULAR, SpecRef);//Set specular reflectivity and shine
+	glMateriali(GL_FRONT, GL_SHININESS, Shine);
+}
+
+void renderScene() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//Clear the window
+	glPushMatrix();//Save viewing matrix state
+	if (world == 1)
+	{
+		glTranslatef(walkX, -1, walkY);
+		glRotatef(lookY, 0, 1, 0);
+		glRotatef(lookX, 1, 0, 0);
+	}
+	if (doll == 1)
+	{
+		glTranslatef(walkX, -1, walkY);
+		glRotatef(lookY, 0, 1, 0);
+		glRotatef(lookX, 1, 0, 0);
+	}
+	for (int i = -3; i < 3; i++) {
+		for (int j = -3; j < 3; j++) {
+			glColor3ub(50, 50, 150);//Change the draw color to slate blue
+			glPushMatrix();
+			glTranslatef(-1*10*i, 0, -6*2*j);
+			eyeright();
+			eyeleft();
+			eyebrowleft();
+			eyebrowright();
+			glColor3f(0.0, 1.0, 0.0);
+			neckring();
+			glColor3ub(50, 40, 60);
+			legright();
+			legleft();
+			glColor3ub(255, 90, 0);
+			armleft();
+			armright();
+			BellyCoat();
+			bellyCoatbottom();
+			glColor3ub(0, 185, 0);
+			handleft();
+			handright();
+			mouth();
+			teeth();
+			glColor3ub(255, 222, 173);
+			head();
+			glColor3f(0.0, 0.0, 0.0);
+			footleft();
+			footright();
+			topbutton();
+			middlebutton();
+			bottombutton();
+			pupilleft();
+			pupilright();
+			glPopMatrix();
+
+		}
+	}
+	
+	glPopMatrix();                                     //****Restore matrix state****
+	glutSwapBuffers();                             //****Flush drawing commands****
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 void cube() {
     glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
          // Top face (y = 1.0f)
