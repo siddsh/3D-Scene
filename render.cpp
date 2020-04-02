@@ -1,5 +1,8 @@
 #include"snowman.cpp"
 #include<math.h>
+#include"pyramid.cpp"
+#include"cube.cpp"
+#include"torus.cpp"
 #pragma once
 //A variable to store the X position where the mouse is clicked
 int xOrigin = -1;
@@ -11,6 +14,10 @@ float lx = 0.0f,ly = 0.0f, lz = -1.0f;
 float x = 0.0f, z = 5.0f;
 float deltaAngle = 0.0f;
 float deltaMove = 0;
+float zoom = 1.0f;
+GLfloat anglePyramid = 0.0f;  // Rotational angle for pyramid 
+GLfloat angleCube = 0.0f;     // Rotational angle for cube 
+int refreshMills = 15;        // refresh interval in milliseconds 
 
 void computePos(float deltaMove) {
 
@@ -40,7 +47,8 @@ void renderScene(void) {
 	gluLookAt(x, 1.0f, z,
 		x + lx, 1.0f, z + lz,
 		0.0f, 1.0f, 0.0f);
-
+	//Try for a zoom in
+	glScalef(zoom, zoom, zoom);
 	// Draw ground
 	glColor3f(0.9f, 0.9f, 0.9f);
 	glBegin(GL_QUADS);
@@ -49,15 +57,29 @@ void renderScene(void) {
 	glVertex3f(100.0f, 0.0f, 100.0f);
 	glVertex3f(100.0f, 0.0f, -100.0f);
 	glEnd();
+	glTranslatef(-1.5f, 2.0f, -6.0f);  // Move left and into the screen
+	//glRotatef(anglePyramid, 1.0f, 0.0f, 0.0f);  // Rotate about the (1,1,0)-axis [NEW]
+	pyramid();
+	glLoadIdentity(); 
+	gluLookAt(x, 1.0f, z,
+		x + lx, 1.0f, z + lz,
+		0.0f, 1.0f, 0.0f);
+	//Try for a zoom in
+	glScalef(zoom, zoom, zoom);// Reset the model-view matrix
+	glTranslatef(1.5f, 2.0f, -7.0f);  // Move right and into the screen
+	//glRotatef(angleCube, 1.0f, 1.0f, 1.0f);  // Rotate about (1,1,1)-axis [NEW]
 
+	cube();
 	// Draw 36 SnowMen
-	for (int i = -3; i < 3; i++)
+	/*for (int i = -3; i < 3; i++)
 		for (int j = -3; j < 3; j++) {
 			glPushMatrix();
 			glTranslatef(i * 10.0, 0, j * 10.0);
 			drawSnowMan();
 			glPopMatrix();
 		}
-
+		*/
+	anglePyramid += 0.2f;
+	angleCube -= 0.15f;
 	glutSwapBuffers();
 }
