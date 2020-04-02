@@ -15,10 +15,11 @@ float x = 0.0f, z = 5.0f;
 float deltaAngle = 0.0f;
 float deltaMove = 0;
 float zoom = 1.0f;
+
 GLfloat anglePyramid = 0.0f;  // Rotational angle for pyramid 
 GLfloat angleCube = 0.0f;     // Rotational angle for cube 
 int refreshMills = 15;        // refresh interval in milliseconds 
-
+GLdouble size = 2;
 void computePos(float deltaMove) {
 
 	x += deltaMove * lx * 0.1f;
@@ -66,7 +67,7 @@ void renderScene(void) {
 		0.0f, 1.0f, 0.0f);
 	//Try for a zoom in
 	glScalef(zoom, zoom, zoom);// Reset the model-view matrix
-	glTranslatef(1.5f, 2.0f, -7.0f);  // Move right and into the screen
+	glTranslatef(1.5f, 2.0f, -6.0f);  // Move right and into the screen
 	//glRotatef(angleCube, 1.0f, 1.0f, 1.0f);  // Rotate about (1,1,1)-axis [NEW]
 
 	cube();
@@ -79,6 +80,32 @@ void renderScene(void) {
 			glPopMatrix();
 		}
 		*/
+	glLoadIdentity();
+	gluLookAt(x, 1.0f, z,
+		x + lx, 1.0f, z + lz,
+		0.0f, 1.0f, 0.0f);
+	//Try for a zoom in
+	glScalef(zoom, zoom, zoom);// Reset the model-view matrix
+	glTranslatef(0.0f, 1.0f, -1.0f);  // Move right and into the screen
+	//glRotatef(angleCube, 1.0f, 1.0f, 1.0f);  // Rotate about (1,1,1)-axis [NEW]
+	glutWireTorus(iradius, oradius, sides, nrings);
+	glLoadIdentity();
+	gluLookAt(x, 1.0f, z,
+		x + lx, 1.0f, z + lz,
+		0.0f, 1.0f, 0.0f);
+	//Try for a zoom in
+	glScalef(zoom, zoom, zoom);// Reset the model-view matrix
+	glTranslatef(0.0f, 1.0f, -10.0f);  // Move right and into the screen
+	glutWireTeapot(size); // for drawing utah's teapot
+	glLoadIdentity();
+	gluLookAt(x, 1.0f, z,
+		x + lx, 1.0f, z + lz,
+		0.0f, 1.0f, 0.0f);
+	//Try for a zoom in
+	glScalef(zoom, zoom, zoom);// Reset the model-view matrix
+	glTranslatef(0.0f, 1.0f, -30.0f);  // Move right and into the screen
+	glutWireIcosahedron();
+
 	anglePyramid += 0.2f;
 	angleCube -= 0.15f;
 	glutSwapBuffers();
